@@ -4,6 +4,9 @@ OPK := bin/GCWShmup.opk
 CXX := $(CROSS_COMPILE)g++
 
 DEPENDENCIES := sdl SDL_image
+ifdef CROSS_COMPILE
+DEPENDENCIES := libini sdl
+endif
 
 SYSROOT := $(shell $(CXX) --print-sysroot)
 PKGCONFIG := env PKG_CONFIG_SYSROOT_DIR=$(SYSROOT) PKG_CONFIG_LIBDIR=$(SYSROOT)/usr/lib/pkgconfig pkg-config
