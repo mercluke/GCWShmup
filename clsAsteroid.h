@@ -1,7 +1,5 @@
 #ifndef ASTEROID_H
 #define ASTEROID_H
-#define HEIGHT 32
-#define WIDTH  32
 #include "globalConstants.h"
 
 class clsAsteroid
@@ -10,7 +8,7 @@ public:
 	clsAsteroid(void);
 	~clsAsteroid(void);
 	//virtual void setPicture(LPDIRECT3DDEVICE9 dev);
-	//void draw(LPD3DXSPRITE spt);
+	void draw(SDL_Surface* screen);
 	void move();
 	void setXY(int x, int y);
 	float getX();
@@ -21,6 +19,8 @@ public:
 	int deathType;
 
 protected:
+	static const int HEIGHT = 32;
+	static const int WIDTH =  32;
 	float yPos;
 	float xPos;
 	//LPDIRECT3DTEXTURE9 sprite;

@@ -2,7 +2,7 @@
 #define GLOBALCONSTANTS_H
 #define SCREEN_WIDTH		320
 #define SCREEN_HEIGHT		240
-#define SPEED				10
+#define SPEED				1
 
 #include <iostream>
 #include "SDL/SDL.h"

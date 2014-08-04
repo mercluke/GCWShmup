@@ -38,11 +38,11 @@ clsHealthBar::~clsHealthBar(void)
                                 NULL,    // no image info struct
                                 NULL,    // not using 256 colors
                                 &spriteEdge);    // load to sprite
-}
+}*/
 
-void clsHealthBar::draw(LPD3DXSPRITE spt, int hp)
+void clsHealthBar::draw(SDL_Surface* screen, int hp)
 {
-	D3DXVECTOR2 spriteCentre=D3DXVECTOR2(32.0f,32.0f);
+	/*D3DXVECTOR2 spriteCentre=D3DXVECTOR2(32.0f,32.0f);
 	D3DXVECTOR2 scaling(1.0f,1.0f);
 	D3DXMATRIX mat;
 	D3DXMatrixTransformation2D(&mat,NULL,0.0,&scaling,&spriteCentre,0,0);
@@ -54,7 +54,7 @@ void clsHealthBar::draw(LPD3DXSPRITE spt, int hp)
     spt->Draw(spriteEdge, NULL, &center, &positionEdge, D3DCOLOR_ARGB(255, 255, 255, 255));
 	D3DXVECTOR3 position(0,0,0);
     spt->Draw(sprite, &part, &center, &position, D3DCOLOR_ARGB(255, 255, 255, 255));
-
+*/
 
 	
-}*/
+}

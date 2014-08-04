@@ -29,11 +29,11 @@ clsBullet::~clsBullet(void)
                                 NULL,    // no image info struct
                                 NULL,    // not using 256 colors
                                 &sprite);    // load to sprite
-}
+}*/
 
-void clsBullet::draw(LPD3DXSPRITE spt)
+void clsBullet::draw(SDL_Surface* screen)
 {
-	D3DXVECTOR2 spriteCentre=D3DXVECTOR2(32.0f,32.0f);
+/*	D3DXVECTOR2 spriteCentre=D3DXVECTOR2(32.0f,32.0f);
 	D3DXVECTOR2 scaling(1.0f,1.0f);
 	D3DXMATRIX mat;
 	D3DXMatrixTransformation2D(&mat,NULL,0.0,&scaling,&spriteCentre,0,0);
@@ -42,8 +42,8 @@ void clsBullet::draw(LPD3DXSPRITE spt)
 	D3DXVECTOR3 center(0.0f, 0.0f, 0.0f); // center at the upper-left corner
     D3DXVECTOR3 position(xPos,yPos,0);
     spt->Draw(sprite, NULL, &center, &position, D3DCOLOR_ARGB(255, 255, 255, 255));
-	
-}*/
+*/	
+}
 
 void clsBullet::setXY(int x, int y)
 {

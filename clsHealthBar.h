@@ -7,7 +7,7 @@ public:
 	clsHealthBar(void);
 	~clsHealthBar(void);
 //	void setPicture(LPDIRECT3DDEVICE9 dev);
-//	void draw(LPD3DXSPRITE spt, int hp);
+	void draw(SDL_Surface* screen, int hp);
 
 private:
 //	RECT part;

@@ -6,9 +6,13 @@
 #include "clsAsteroid.h"
 #include "clsHealthBar.h"
 #include "clsBackGround.h"
+#define KEY_DOWN(x) (event.type == SDL_KEYDOWN && event.key.keysym.sym == x)
+#define DELAY 20
 
 
 // define the screen resolution and keyboard macros
+SDL_Event event;
+SDL_Surface* screen = NULL;
 clsPlayer plane;
 clsBackGround bg;
 clsHealthBar hp;

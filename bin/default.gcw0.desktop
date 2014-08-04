@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=GCWShmup
+Comment=A plane thing
+Exec=GCWShmup
+Terminal=true
+Type=Application
+StartupNotify=true
+Icon=icon
+Categories=test;

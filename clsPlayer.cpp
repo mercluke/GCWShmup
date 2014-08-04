@@ -16,7 +16,6 @@ void clsPlayer::constructor()
 	xPos = (SCREEN_WIDTH-FRAMEWIDTH)/2;
 	yPos = SCREEN_HEIGHT-FRAMEHEIGHT;
 	hp = 5;
-	rotate = 0;
 }
 
 /*void clsPlayer::setPicture(LPDIRECT3DDEVICE9 dev)
@@ -35,11 +34,11 @@ void clsPlayer::constructor()
                                 NULL,    // no image info struct
                                 NULL,    // not using 256 colors
                                 &sprite);    // load to sprite
-}
+}*/
 
-void clsPlayer::draw(LPD3DXSPRITE spt)
+void clsPlayer::draw(SDL_Surface* screen)
 {
-	if(hp == 0)
+	/*if(hp == 0)
 	{
 		rotate+=0.18;
 	}
@@ -59,8 +58,8 @@ void clsPlayer::draw(LPD3DXSPRITE spt)
 	D3DXVECTOR3 center(0.0f, 0.0f, 0.0f); // center at the upper-left corner
     D3DXVECTOR3 position(xPos,yPos,0);
     spt->Draw(sprite, &part, &center, &position, D3DCOLOR_ARGB(255, 255, 255, 255));
-	
-}*/
+	*/
+}
 
 void clsPlayer::setXY(int x, int y)
 {

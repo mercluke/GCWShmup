@@ -1,8 +1,5 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#define NUMFRAMES 3
-#define FRAMEWIDTH 32
-#define FRAMEHEIGHT 32
 #include "globalConstants.h"
 
 class clsPlayer
@@ -12,7 +9,7 @@ public:
 	~clsPlayer(void);
 	void constructor();
 	//void setPicture(LPDIRECT3DDEVICE9 dev);
-	//void draw(LPD3DXSPRITE spt);
+	void draw(SDL_Surface* screen);
 	void setXY(int x, int y);
 	int getX();
 	int getY();
@@ -22,6 +19,9 @@ public:
 	bool collide(float asteroidX, float asteroidY, int damage);
 
 private:
+	static const int NUMFRAMES = 3;
+	static const int FRAMEWIDTH = 32;
+	static const int FRAMEHEIGHT = 32;
 	int frame;
 	int frameXPos;
 	//RECT part;
