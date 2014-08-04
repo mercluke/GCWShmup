@@ -3,11 +3,22 @@
 
 clsHealthBar::clsHealthBar(void)
 {
+    sprite = SDL_LoadBMP("data/health.bmp");
+    sprEdge = SDL_LoadBMP("data/healthEdge.bmp");
+    SDL_SetColorKey(sprite, SDL_SRCCOLORKEY, SDL_MapRGB(sprite->format, 255, 0, 255));
+    SDL_SetColorKey(sprEdge, SDL_SRCCOLORKEY, SDL_MapRGB(sprEdge->format, 255, 0, 255));
+    posEdge.h = HEIGHT;
+    posEdge.w = EDGEWIDTH;
+    posEdge.y = 0;
+    part.x = 0;
+    part.y = 0;
+    part.h = HEIGHT;
+    part.w = WIDTH;
 }
 
 clsHealthBar::~clsHealthBar(void)
 {
-	//sprite->Release();
+	SDL_FreeSurface(sprite);
 }
 
 /*void clsHealthBar::setPicture(LPDIRECT3DDEVICE9 dev)
@@ -42,19 +53,9 @@ clsHealthBar::~clsHealthBar(void)
 
 void clsHealthBar::draw(SDL_Surface* screen, int hp)
 {
-	/*D3DXVECTOR2 spriteCentre=D3DXVECTOR2(32.0f,32.0f);
-	D3DXVECTOR2 scaling(1.0f,1.0f);
-	D3DXMATRIX mat;
-	D3DXMatrixTransformation2D(&mat,NULL,0.0,&scaling,&spriteCentre,0,0);
-	spt->SetTransform(&mat);
-
-	D3DXVECTOR3 center(0.0f, 0.0f, 0.0f); // center at the upper-left corner
-	SetRect(&part, 0, 0, ((160/5)*hp), 16);
-	D3DXVECTOR3 positionEdge((160/5)*hp,0,0);
-    spt->Draw(spriteEdge, NULL, &center, &positionEdge, D3DCOLOR_ARGB(255, 255, 255, 255));
-	D3DXVECTOR3 position(0,0,0);
-    spt->Draw(sprite, &part, &center, &position, D3DCOLOR_ARGB(255, 255, 255, 255));
-*/
-
+    posEdge.x = part.w;
+    part.w = (WIDTH / 5)*hp;
+    SDL_BlitSurface(sprEdge, NULL, screen, &posEdge);
+    SDL_BlitSurface(sprite, &part, screen, NULL);
 	
 }

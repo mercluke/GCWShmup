@@ -6,12 +6,15 @@ class clsHealthBar
 public:
 	clsHealthBar(void);
 	~clsHealthBar(void);
-//	void setPicture(LPDIRECT3DDEVICE9 dev);
 	void draw(SDL_Surface* screen, int hp);
 
 private:
-//	RECT part;
-//	LPDIRECT3DTEXTURE9 sprite;
-//	LPDIRECT3DTEXTURE9 spriteEdge;
+	SDL_Rect part;
+	SDL_Rect posEdge;
+	SDL_Surface* sprite;
+	SDL_Surface* sprEdge;
+	static const int HEIGHT = 16;
+	static const int WIDTH = 160;
+	static const int EDGEWIDTH = 16;
 };
 #endif
