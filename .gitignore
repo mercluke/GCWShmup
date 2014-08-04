@@ -1,6 +1,9 @@
 # Object files
 *.o
 
+# Assorted tmp files
+*\~
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
