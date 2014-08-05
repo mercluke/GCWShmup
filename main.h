@@ -13,6 +13,9 @@
 // define the screen resolution and keyboard macros
 SDL_Event event;
 SDL_Surface* screen = NULL;
+SDL_Surface* text;
+SDL_Color text_color = {255,255,255};
+TTF_Font* font = NULL;
 clsPlayer plane;
 clsBackGround bg;
 clsHealthBar hp;
@@ -48,5 +51,8 @@ int counter; //used for gravity and the like...  - well not gravity since it's b
 float frequency;
 bool gameOver;
 int score;
+bool gotHealthPack = false;
+static const int HEALTHBONUS = 50;
+int damageModifier; //higher number == lower damage
 char scoreText[100];
 #endif

@@ -15,16 +15,17 @@ public:
 	float getY();
 	clsAsteroid* asteroidNext;
 	bool checkDead();
+	void freeList();
 	void takeDamage(bool damage/*, CSoundManager* SoundManager*/);
 	int deathType;
 
 protected:
-	static const int HEIGHT = 32;
-	static const int WIDTH =  32;
+	static const int HEIGHT = 16;
+	static const int WIDTH =  16;
 	float yPos;
 	float xPos;
-	//LPDIRECT3DTEXTURE9 sprite;
-	float rotation;
+	SDL_Rect pos;
+	static SDL_Surface* sprite;
 	bool dead;
 	int hp;
 };

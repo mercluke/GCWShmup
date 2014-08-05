@@ -1,17 +1,41 @@
 //#include "StdAfx.h"
 #include "clsBullet.h"
 
+SDL_Surface* clsBullet::sprite = NULL;
 
 clsBullet::clsBullet(void)
 {
 	bulletNext=NULL;
 	dead = false;
+
+	srand((unsigned)time(NULL)); //generates random number based on time as rand()
+
+	if(sprite == NULL)
+	{
+		sprite = SDL_LoadBMP("data/bullet.bmp");
+    	SDL_SetColorKey(sprite, SDL_SRCCOLORKEY, SDL_MapRGB(sprite->format, 255, 0, 255));
+	}
 }
 
 clsBullet::~clsBullet(void)
 {
-	//sprite->Release();
 }
+
+
+void clsBullet::freeList()
+{
+	if(bulletNext != NULL)
+	{
+		bulletNext->freeList();
+		delete this;
+	}
+	if(sprite != NULL)
+	{
+		SDL_FreeSurface(sprite);
+		sprite = NULL;
+	}
+}
+
 
 /*void clsBullet::setPicture(LPDIRECT3DDEVICE9 dev)
 {
@@ -43,6 +67,9 @@ void clsBullet::draw(SDL_Surface* screen)
     D3DXVECTOR3 position(xPos,yPos,0);
     spt->Draw(sprite, NULL, &center, &position, D3DCOLOR_ARGB(255, 255, 255, 255));
 */	
+    pos.x = xPos;
+    pos.y = yPos;
+    SDL_BlitSurface(sprite, NULL, screen, &pos);
 }
 
 void clsBullet::setXY(int x, int y)
@@ -66,7 +93,7 @@ int clsBullet::getY()
 
 void clsBullet::move(int direction)
 {
-	if(direction == 0)//up
+	if(direction == DIR_UP)//up
 	{
 		if(yPos > 0)
 		{
@@ -88,9 +115,9 @@ bool clsBullet::checkDead()
 
 bool clsBullet::collide(float AsteroidX, float AsteroidY)
 {
-	if((xPos+32) > AsteroidX && xPos < (AsteroidX+32))
+	if((xPos+FRAME_HEIGHT) > AsteroidX && xPos < (AsteroidX+FRAME_HEIGHT))
 	{
-		if((yPos+11) < (AsteroidY + 32) && (yPos+11) > AsteroidY)
+		if((yPos+BULLET_HEIGHT) < (AsteroidY + FRAME_HEIGHT) && (yPos+BULLET_HEIGHT) > AsteroidY)
 		{
 			dead = true;
 			return true;

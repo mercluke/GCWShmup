@@ -1,21 +1,39 @@
 //#include "StdAfx.h"
 #include "clsAsteroid.h"
 
+SDL_Surface* clsAsteroid::sprite = NULL;
 
 clsAsteroid::clsAsteroid(void)
 {
+	if(sprite == NULL)
+	{
+		sprite = SDL_LoadBMP("data/asteroid1.bmp");
+    	SDL_SetColorKey(sprite, SDL_SRCCOLORKEY, SDL_MapRGB(sprite->format, 255, 0, 255));
+	}
 	yPos = (0-SCREEN_HEIGHT);
-	//srand((unsigned)time(0)); //generates random number based on time as rand()
 	xPos = (rand()%(SCREEN_WIDTH-WIDTH)); //starts at a random horizontal position to make games a little less boring
 	asteroidNext=NULL;
-	rotation = 0;
 	dead = false;
-	hp = 5;
+	hp = (rand()%5)+1;
 }
 
 clsAsteroid::~clsAsteroid(void)
 {
-	//sprite->Release();
+	
+}
+
+void clsAsteroid::freeList()
+{
+	if(asteroidNext != NULL)
+	{
+		asteroidNext->freeList();
+		delete this;
+	}
+	if(sprite != NULL)
+	{
+		SDL_FreeSurface(sprite);
+		sprite = NULL;
+	}
 }
 
 void clsAsteroid::setXY(int x, int y) //not used atm but w/e
@@ -65,6 +83,10 @@ void clsAsteroid::draw(SDL_Surface* screen)
     D3DXVECTOR3 position(xPos,yPos,0);
     spt->Draw(sprite, NULL, &center, &position, D3DCOLOR_ARGB(255, 255, 255, 255));
 */	
+
+    pos.x = xPos;
+    pos.y = yPos;
+    SDL_BlitSurface(sprite, NULL, screen, &pos);
 }
 
 

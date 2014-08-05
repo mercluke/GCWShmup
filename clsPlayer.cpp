@@ -2,21 +2,27 @@
 
 clsPlayer::clsPlayer(void)
 {
-	constructor();
+	sprite = SDL_LoadBMP("data/plane.bmp");
+    SDL_SetColorKey(sprite, SDL_SRCCOLORKEY, SDL_MapRGB(sprite->format, 255, 0, 255));
+    reset();
 }
 
 clsPlayer::~clsPlayer(void)
 {
-	//sprite->Release();
+	SDL_FreeSurface(sprite);
 }
 
-void clsPlayer::constructor()
+void clsPlayer::reset(void)
 {
 	frame = 0;
-	xPos = (SCREEN_WIDTH-FRAMEWIDTH)/2;
-	yPos = SCREEN_HEIGHT-FRAMEHEIGHT;
-	hp = 5;
+	xPos = pos.x = (SCREEN_WIDTH-FRAMEWIDTH)/2;
+	yPos = pos.y = SCREEN_HEIGHT-FRAMEHEIGHT;
+	view.x = 0; view.y = 0;
+	view.h = pos.h = FRAMEHEIGHT;
+	view.w =  pos.w = FRAMEWIDTH;
+	hp = FULLHEALTH;
 }
+
 
 /*void clsPlayer::setPicture(LPDIRECT3DDEVICE9 dev)
 {
@@ -38,27 +44,19 @@ void clsPlayer::constructor()
 
 void clsPlayer::draw(SDL_Surface* screen)
 {
-	/*if(hp == 0)
-	{
-		rotate+=0.18;
-	}
-	D3DXVECTOR2 spriteCentre=D3DXVECTOR2(xPos+16,yPos+16);
-	D3DXVECTOR2 scaling(1.0f,1.0f);
-	D3DXMATRIX mat;
-	D3DXMatrixTransformation2D(&mat,NULL,0.0,&scaling,&spriteCentre,rotate,0);
-	spt->SetTransform(&mat);
 
-    if(frame == NUMFRAMES) frame=0;
-    if(frame < NUMFRAMES) frame++;     // if we aren't on the last frame, go to the next frame
 
-	    // calculate the x-position
-    frameXPos = frame * FRAMEWIDTH;
-	SetRect(&part, frameXPos, 0, (frameXPos + FRAMEWIDTH), FRAMEHEIGHT);
+    if(frame == NUMFRAMES) 
+    	{frame=0;}
+    else if(frame < NUMFRAMES) 
+    	{frame++;}     // if we aren't on the last frame, go to the next frame
+	
+	pos.x = xPos;
+	pos.y = yPos;
+	view.x = FRAMEWIDTH*frame;
 
-	D3DXVECTOR3 center(0.0f, 0.0f, 0.0f); // center at the upper-left corner
-    D3DXVECTOR3 position(xPos,yPos,0);
-    spt->Draw(sprite, &part, &center, &position, D3DCOLOR_ARGB(255, 255, 255, 255));
-	*/
+	SDL_BlitSurface(sprite, &view, screen, &pos);
+
 }
 
 void clsPlayer::setXY(int x, int y)
@@ -82,7 +80,7 @@ int clsPlayer::getY()
 
 void clsPlayer::move(int direction)
 {
-	if(direction == 0 && yPos > 0)//up
+	if(direction == DIR_UP && yPos > 0)//up
 	{
 		if(yPos < (SPEED/1.5))
 		{
@@ -93,7 +91,7 @@ void clsPlayer::move(int direction)
 			yPos-=(SPEED/1.5);
 		}
 	}
-	else if(direction == 1 && yPos < (SCREEN_HEIGHT-FRAMEHEIGHT))//down
+	else if(direction == DIR_DOWN && yPos < (SCREEN_HEIGHT-FRAMEHEIGHT))//down
 	{
 		if(yPos > ((SCREEN_HEIGHT-FRAMEHEIGHT)-SPEED))
 		{
@@ -104,7 +102,7 @@ void clsPlayer::move(int direction)
 			yPos+=SPEED;
 		}
 	}
-	else if(direction == 2 && xPos > 0)//left
+	else if(direction == DIR_LEFT && xPos > 0)//left
 	{
 		if(xPos < SPEED)
 		{
@@ -115,7 +113,7 @@ void clsPlayer::move(int direction)
 			xPos-=SPEED;
 		}
 	}
-	else if(direction == 3 && xPos < (SCREEN_WIDTH-(FRAMEWIDTH-1)))//right - Note: plane is 1 pixel off on the right side
+	else if(direction == DIR_RIGHT && xPos < (SCREEN_WIDTH-(FRAMEWIDTH-1)))//right - Note: plane is 1 pixel off on the right side
 	{
 		if(xPos > ((SCREEN_WIDTH-(FRAMEWIDTH-1))-SPEED))
 		{
@@ -126,15 +124,15 @@ void clsPlayer::move(int direction)
 		xPos+=SPEED;
 		}
 	}
-	else if(direction == 5 && yPos < (SCREEN_HEIGHT-FRAMEHEIGHT))//downward drift
+	else if(direction == DIR_DRIFT && yPos < (SCREEN_HEIGHT-FRAMEHEIGHT))//downward drift
 	{
-		if(yPos > ((SCREEN_HEIGHT-FRAMEHEIGHT)-(SPEED/4)))
+		if(yPos > ((SCREEN_HEIGHT-FRAMEHEIGHT)-(float)(SPEED/4)))
 		{
 			yPos=(SCREEN_HEIGHT-FRAMEHEIGHT);
 		}
 		else
 		{
-			yPos+=(SPEED/4);
+			yPos+=(float)(SPEED/4);
 		}
 	}
 }
@@ -155,9 +153,9 @@ bool clsPlayer::takeDamage(int damage)
 
 bool clsPlayer::collide(float AsteroidX, float AsteroidY, int damage)
 {
-	if((xPos+32) > AsteroidX && xPos < (AsteroidX+32))
+	if((xPos+FRAMEWIDTH) > AsteroidX && xPos < (AsteroidX+FRAMEWIDTH))
 	{
-		if(yPos < (AsteroidY + 32) && (yPos+32) > AsteroidY)
+		if(yPos < (AsteroidY + FRAMEHEIGHT) && (yPos+FRAMEHEIGHT) > AsteroidY)
 		{
 			hp -= damage;
 			return true;
@@ -169,4 +167,9 @@ bool clsPlayer::collide(float AsteroidX, float AsteroidY, int damage)
 int clsPlayer::getHP()
 {
 	return hp;
+}
+
+void clsPlayer::upHP(int bonus)
+{
+	hp = (bonus+hp <= FULLHEALTH) ? bonus+hp : FULLHEALTH;
 }

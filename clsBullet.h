@@ -15,12 +15,16 @@ public:
 	int getY();
 	void move(int direction);
 	bool checkDead();
+	void freeList();
 	bool collide(float asteroidX, float asteroidY);
 
 private:
 	float xPos;
 	float yPos;
-	//LPDIRECT3DTEXTURE9 sprite;
+	SDL_Rect pos;
+	static SDL_Surface* sprite;
 	bool dead;
+	static const int BULLET_HEIGHT = 6;
+	static const int FRAME_HEIGHT = 16;
 };
 #endif

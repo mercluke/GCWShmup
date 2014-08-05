@@ -11,6 +11,8 @@ int main(int argc, char* args[])
 {
 	int quit = 0;
 
+	srand((unsigned)time(NULL)); //generates random number based on time as rand()
+
 
     /*HWND hWnd;
     WNDCLASSEX wc; 
@@ -41,6 +43,10 @@ int main(int argc, char* args[])
     //MSG msg;
 
     SDL_Init(SDL_INIT_VIDEO);
+    TTF_Init();
+
+    font = TTF_OpenFont("FreeSans.ttf", 24);
+
     screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_SWSURFACE);
     SDL_ShowCursor(SDL_DISABLE);
 
@@ -69,6 +75,11 @@ int main(int argc, char* args[])
 
 		if(!gameOver)
 		{
+			if(!gotHealthPack && !(score%HEALTHBONUS))
+			{
+				plane.upHP(1);
+			}
+
 			snprintf(scoreText, 99, "Score: %i", score);
 			count();
 			moveObjects();
@@ -84,14 +95,27 @@ int main(int argc, char* args[])
 		}
 		render_frame();
 
-        // check the 'select' key
+        // check the 'L' or 'R' shoulder buttons
         if((KEY_DOWN(SDLK_TAB)) || (KEY_DOWN(SDLK_BACKSPACE))){
             quit = 1;
         }
  
     }
 
+    //clean things up a little
     SDL_FreeSurface(screen);
+    if(asteroidHead != NULL)
+	{
+		asteroidHead->freeList();
+		asteroidHead = NULL;
+	}
+	if(bulletHead != NULL)
+	{
+		bulletHead->freeList();
+		bulletHead = NULL;
+	}
+
+	TTF_Quit();
 
  	SDL_Quit();
 
@@ -131,7 +155,7 @@ void render_frame(void)
 			bulletTemp->draw(screen);
 			if(!gameOver)
 			{
-				bulletTemp->move(0);
+				bulletTemp->move(DIR_UP);
 			}
 			//move to the next object in list
 			bulletTemp=bulletTemp->bulletNext;
@@ -171,30 +195,32 @@ void count()
 }
 void moveObjects()
 {
+	bg.move();
+
 	if(KEY_DOWN(SDLK_UP))
 	{
-		plane.move(0);
+		plane.move(DIR_UP);
 	}
 	else if(KEY_DOWN(SDLK_DOWN))
 	{
-		plane.move(1);
+		plane.move(DIR_DOWN);
 	}
 	else
 	{
-		if(counter%2==0)
+		if(counter%2)
 		{
-		plane.move(5);
+			plane.move(DIR_DRIFT);
 		}
 	}
 	if(KEY_DOWN(SDLK_LEFT))
 	{
-		plane.move(2);
+		plane.move(DIR_LEFT);
 	}
 	if(KEY_DOWN(SDLK_RIGHT))
 	{
-		plane.move(3);
+		plane.move(DIR_RIGHT);
 	}
-	if(((counter%4)==0) && KEY_DOWN(SDLK_LCTRL))
+	if(((counter%damageModifier)==0) && KEY_DOWN(SDLK_LCTRL))
 	{
 		addBulletToList(plane.getX(), plane.getY());
 	}
@@ -287,17 +313,18 @@ void addAsteroidToList()
 	if(counter%5 == 0)
 	{
 		asteroidTemp = new clsAsteroid;
+		//add new asteroid to start of linked list
+		asteroidTemp->asteroidNext = asteroidHead;
+		asteroidHead = asteroidTemp;
 	}
 	else
 	{
 		//diff asteroid, change later
-		asteroidTemp = new clsAsteroid;
+		//asteroidTemp = new clsAsteroid;
 	}
 	//asteroidTemp->setPicture(d3ddev);
 
-	//add new asteroid to start of linked list
-	asteroidTemp->asteroidNext = asteroidHead;
-	asteroidHead = asteroidTemp;
+	
 }
 
 void removeAsteroidFromList()
@@ -362,11 +389,20 @@ void loseGame()
 
 void restartGame()
 {
-	asteroidHead = NULL;
-	plane.constructor();
-	bulletHead = NULL;
+	if(asteroidHead != NULL)
+	{
+		asteroidHead->freeList();
+		asteroidHead = NULL;
+	}
+	if(bulletHead != NULL)
+	{
+		bulletHead->freeList();
+		bulletHead = NULL;
+	}
+	plane.reset();
 	gameOver = false;
-	frequency = 80;
+	damageModifier = 4;
+	frequency = 100;
 	counter = 1;
 	score = 0;
 }
@@ -381,4 +417,7 @@ void keepScore()
     //                  &textbox,
     //                  DT_CENTER | 0,
     //                  D3DCOLOR_ARGB(255, 255, 255, 255));
+
+    //text = TTF_RenderText_Solid(font, scoreText, text_color);
+    SDL_BlitSurface(text, NULL, screen, NULL);
 }

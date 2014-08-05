@@ -3,10 +3,7 @@ OBJS := OBJ/main.o OBJ/clsPlayer.o OBJ/clsHealthBar.o OBJ/clsBullet.o OBJ/clsBac
 OPK := bin/GCWShmup.opk
 CXX := $(CROSS_COMPILE)g++
 
-DEPENDENCIES := sdl SDL_image
-ifdef CROSS_COMPILE
-DEPENDENCIES := libini sdl
-endif
+DEPENDENCIES := libini sdl SDL_ttf
 
 SYSROOT := $(shell $(CXX) --print-sysroot)
 PKGCONFIG := env PKG_CONFIG_SYSROOT_DIR=$(SYSROOT) PKG_CONFIG_LIBDIR=$(SYSROOT)/usr/lib/pkgconfig pkg-config

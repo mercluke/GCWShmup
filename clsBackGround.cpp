@@ -17,7 +17,6 @@ clsBackGround::~clsBackGround(void)
 
 void clsBackGround::draw(SDL_Surface* screen)
 {
-	move();
 	SDL_BlitSurface(sprite, NULL, screen, &bg1pos);
 	SDL_BlitSurface(sprite, &bg2view, screen, &bg2pos);
 	//std::cout << bg1pos.y << "loop\n";

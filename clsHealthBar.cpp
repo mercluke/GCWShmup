@@ -10,10 +10,10 @@ clsHealthBar::clsHealthBar(void)
     posEdge.h = HEIGHT;
     posEdge.w = EDGEWIDTH;
     posEdge.y = 0;
-    part.x = 0;
-    part.y = 0;
-    part.h = HEIGHT;
-    part.w = WIDTH;
+    view.x = 0;
+    view.y = 0;
+    view.h = HEIGHT;
+    view.w = WIDTH;
 }
 
 clsHealthBar::~clsHealthBar(void)
@@ -53,9 +53,14 @@ clsHealthBar::~clsHealthBar(void)
 
 void clsHealthBar::draw(SDL_Surface* screen, int hp)
 {
-    posEdge.x = part.w;
-    part.w = (WIDTH / 5)*hp;
-    SDL_BlitSurface(sprEdge, NULL, screen, &posEdge);
-    SDL_BlitSurface(sprite, &part, screen, NULL);
+    posEdge.x = view.w;
+    view.w = (WIDTH / FULLHEALTH)*hp;
+
+    if(hp)
+    {
+        SDL_BlitSurface(sprEdge, NULL, screen, &posEdge);
+    }
+    
+    SDL_BlitSurface(sprite, &view, screen, NULL);
 	
 }
