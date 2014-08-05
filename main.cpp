@@ -43,9 +43,9 @@ int main(int argc, char* args[])
     //MSG msg;
 
     SDL_Init(SDL_INIT_VIDEO);
-    TTF_Init();
+    //TTF_Init();
 
-    font = TTF_OpenFont("FreeSans.ttf", 24);
+    //font = TTF_OpenFont("FreeSans.ttf", 24);
 
     screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_SWSURFACE);
     SDL_ShowCursor(SDL_DISABLE);
@@ -115,7 +115,7 @@ int main(int argc, char* args[])
 		bulletHead = NULL;
 	}
 
-	TTF_Quit();
+	//TTF_Quit();
 
  	SDL_Quit();
 
@@ -419,5 +419,5 @@ void keepScore()
     //                  D3DCOLOR_ARGB(255, 255, 255, 255));
 
     //text = TTF_RenderText_Solid(font, scoreText, text_color);
-    SDL_BlitSurface(text, NULL, screen, NULL);
+    //SDL_BlitSurface(text, NULL, screen, NULL);
 }
