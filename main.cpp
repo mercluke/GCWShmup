@@ -75,9 +75,15 @@ int main(int argc, char* args[])
 
 		if(!gameOver)
 		{
+			//this gross bool stops it just giving you infinite health before you change scores
 			if(!gotHealthPack && !(score%HEALTHBONUS))
 			{
 				plane.upHP(1);
+				gotHealthPack == true;
+			}
+			else if(score%HEALTHBONUS)
+			{
+				gotHealthPack = false;
 			}
 
 			snprintf(scoreText, 99, "Score: %i", score);
