@@ -1,6 +1,6 @@
 TARGET := bin/GCWShmup
-OBJS := OBJ/main.o OBJ/clsPlayer.o OBJ/clsHealthBar.o OBJ/clsBullet.o OBJ/clsBackGround.o OBJ/clsAsteroid.o
-OPK := bin/GCWShmup.opk
+OBJS := obj/main.o obj/clsPlayer.o obj/clsHealthBar.o obj/clsBullet.o obj/clsBackGround.o obj/clsAsteroid.o
+OPK := opk/GCWShmup.opk
 CXX := $(CROSS_COMPILE)g++
 
 DEPENDENCIES := libini sdl SDL_ttf
@@ -18,23 +18,23 @@ endif
 $(TARGET): $(OBJS)
 	$(CXX) $(CPPFLAGS) $(LDFLAGS) $^ -o $@
 
-OBJ/main.o: main.cpp main.h globalConstants.h clsPlayer.h clsBullet.h clsAsteroid.h clsHealthBar.h clsBackGround.h
-	$(CXX) $(CPPFLAGS) -c -o OBJ/main.o main.cpp
+obj/main.o: main.cpp main.h globalConstants.h clsPlayer.h clsBullet.h clsAsteroid.h clsHealthBar.h clsBackGround.h
+	$(CXX) $(CPPFLAGS) -c -o obj/main.o main.cpp
 
-OBJ/clsPlayer.o: clsPlayer.cpp clsPlayer.h globalConstants.h
-	$(CXX) $(CPPFLAGS) -c -o OBJ/clsPlayer.o clsPlayer.cpp
+obj/clsPlayer.o: clsPlayer.cpp clsPlayer.h globalConstants.h
+	$(CXX) $(CPPFLAGS) -c -o obj/clsPlayer.o clsPlayer.cpp
 
-OBJ/clsHealthBar.o: clsHealthBar.cpp clsHealthBar.h globalConstants.h
-	$(CXX) $(CPPFLAGS) -c -o OBJ/clsHealthBar.o clsHealthBar.cpp
+obj/clsHealthBar.o: clsHealthBar.cpp clsHealthBar.h globalConstants.h
+	$(CXX) $(CPPFLAGS) -c -o obj/clsHealthBar.o clsHealthBar.cpp
 
-OBJ/clsBullet.o: clsBullet.cpp clsBullet.h globalConstants.h
-	$(CXX) $(CPPFLAGS) -c -o OBJ/clsBullet.o clsBullet.cpp
+obj/clsBullet.o: clsBullet.cpp clsBullet.h globalConstants.h
+	$(CXX) $(CPPFLAGS) -c -o obj/clsBullet.o clsBullet.cpp
 
-OBJ/clsBackGround.o: clsBackGround.cpp clsBackGround.h globalConstants.h
-	$(CXX) $(CPPFLAGS) -c -o OBJ/clsBackGround.o clsBackGround.cpp
+obj/clsBackGround.o: clsBackGround.cpp clsBackGround.h globalConstants.h
+	$(CXX) $(CPPFLAGS) -c -o obj/clsBackGround.o clsBackGround.cpp
 
-OBJ/clsAsteroid.o: clsAsteroid.cpp clsAsteroid.h globalConstants.h
-	$(CXX) $(CPPFLAGS) -c -o OBJ/clsAsteroid.o clsAsteroid.cpp
+obj/clsAsteroid.o: clsAsteroid.cpp clsAsteroid.h globalConstants.h
+	$(CXX) $(CPPFLAGS) -c -o obj/clsAsteroid.o clsAsteroid.cpp
 
 clean:
-	rm -f $(TARGET) OBJ/$(OBJS) $(OPK)
+	rm -f $(TARGET) obj/$(OBJS) $(OPK)

@@ -13,7 +13,7 @@ private:
 	SDL_Rect posEdge;
 	SDL_Surface* sprite;
 	SDL_Surface* sprEdge;
-	static const int HEIGHT = 8;
+	static const int HEIGHT = 12;
 	static const int WIDTH = 80;
 	static const int EDGEWIDTH = 16;
 };

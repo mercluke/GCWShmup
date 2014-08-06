@@ -53,5 +53,6 @@ bool gotHealthPack = false;
 static const int HEALTHBONUS = 50;
 int damageModifier; //higher number == lower damage
 char scoreText[100];
+SDL_Rect scorePos;
 Uint8 *keystate;
 #endif

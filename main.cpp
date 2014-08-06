@@ -12,40 +12,18 @@ int main(int argc, char* args[])
 	int quit = 0;
 	srand((unsigned)time(NULL)); //generates random number based on time as rand()
 
-
-    /*HWND hWnd;
-    WNDCLASSEX wc; 
-
-    ZeroMemory(&wc, sizeof(WNDCLASSEX));
-
-    wc.cbSize = sizeof(WNDCLASSEX); 
-    wc.style = CS_HREDRAW | CS_VREDRAW; 
-    wc.lpfnWndProc = (WNDPROC)WindowProc;
-    wc.hInstance = hInstance;
-    wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-    wc.lpszClassName = L"WindowClass";
-
-    RegisterClassEx(&wc);*/
-
-    //hWnd = CreateWindowEx(NULL, L"WindowClass", L"SteveShmup",
-    //                      WS_OVERLAPPEDWINDOW/*WS_EX_TOPMOST | WS_POPUP*/, 0, 0, 
-	//					  SCREEN_WIDTH, SCREEN_HEIGHT,  
-    //                      NULL, NULL, hInstance, NULL);
-
-    //ShowWindow(hWnd, nCmdShow);
-
-    // set up and initialize Direct3D
-    //initD3D(hWnd);
-
     // enter the main loop
-
-    //MSG msg;
 
     SDL_Init(SDL_INIT_VIDEO);
     keystate = SDL_GetKeyState(NULL);
-    //TTF_Init();
+    TTF_Init();
 
-    //font = TTF_OpenFont("FreeSans.ttf", 24);
+    font = TTF_OpenFont("data/TerminusTTF-4.39.ttf", 12);
+
+   	if(font == NULL)
+   	{
+   		std::cout << "error loading font\n";
+   	}
 
     screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_SWSURFACE);
     SDL_ShowCursor(SDL_DISABLE);
@@ -385,7 +363,9 @@ void removeAsteroidFromList()
 
 void loseGame()
 {
-	sprintf(scoreText, "You Lose, Press ESC and Go Away\n (or press ENTER to lose again)\nScore: %i", score);
+	scorePos.x = 0;
+    scorePos.w = SCREEN_WIDTH;
+	sprintf(scoreText, "RIP | L+R to quit | Start to replay | Score: %i", score);
 }
 
 void restartGame()
@@ -406,6 +386,10 @@ void restartGame()
 	frequency = 100;
 	counter = 1;
 	score = 0;
+	scorePos.x = (SCREEN_WIDTH/3);
+    scorePos.y = 0;
+    scorePos.h = 12;
+    scorePos.w = 40;
 }
 
 void keepScore()
@@ -419,6 +403,9 @@ void keepScore()
     //                  DT_CENTER | 0,
     //                  D3DCOLOR_ARGB(255, 255, 255, 255));
 
-    //text = TTF_RenderText_Solid(font, scoreText, text_color);
-    //SDL_BlitSurface(text, NULL, screen, NULL);
+    if(font != NULL)
+    {
+    	text = TTF_RenderText_Solid(font, scoreText, text_color);
+    	SDL_BlitSurface(text, NULL, screen, &scorePos);
+	}
 }
