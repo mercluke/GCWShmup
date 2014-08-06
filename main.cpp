@@ -10,7 +10,7 @@
 int main(int argc, char* args[])
 {
 	int quit = 0;
-	nsrand((unsigned)time(NULL)); //generates random number based on time as rand()
+	srand((unsigned)time(NULL)); //generates random number based on time as rand()
 
     // enter the main loop
 

@@ -11,7 +11,7 @@ clsAsteroid::clsAsteroid(void)
     	SDL_SetColorKey(sprite, SDL_SRCCOLORKEY, SDL_MapRGB(sprite->format, 255, 0, 255));
 	}
 	yPos = (0-SCREEN_HEIGHT);
-	xPos = (nrand()%(SCREEN_WIDTH-WIDTH)); //starts at a random horizontal position to make games a little less boring
+	xPos = (rand()%(SCREEN_WIDTH-WIDTH)); //starts at a random horizontal position to make games a little less boring
 	asteroidNext=NULL;
 	dead = false;
 	hp = (rand()%5)+1;

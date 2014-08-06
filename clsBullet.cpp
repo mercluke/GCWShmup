@@ -8,8 +8,6 @@ clsBullet::clsBullet(void)
 	bulletNext=NULL;
 	dead = false;
 
-	srand((unsigned)time(NULL)); //generates random number based on time as rand()
-
 	if(sprite == NULL)
 	{
 		sprite = SDL_LoadBMP("data/bullet.bmp");

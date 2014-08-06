@@ -16,8 +16,4 @@
 #include "SDL/SDL_image.h"
 #include "SDL/SDL_ttf.h"
 
-void nsrand(unsigned nseed);
-unsigned nrand(void);
-
-static unsigned seed;
 #endif

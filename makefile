@@ -1,5 +1,5 @@
 TARGET := bin/GCWShmup
-OBJS := obj/globalStuff.o obj/main.o obj/clsPlayer.o obj/clsHealthBar.o obj/clsBullet.o obj/clsBackGround.o obj/clsAsteroid.o
+OBJS := obj/main.o obj/clsPlayer.o obj/clsHealthBar.o obj/clsBullet.o obj/clsBackGround.o obj/clsAsteroid.o
 OPK := opk/GCWShmup.opk
 CXX := $(CROSS_COMPILE)g++
 
@@ -35,9 +35,6 @@ obj/clsBackGround.o: clsBackGround.cpp clsBackGround.h globalStuff.h
 
 obj/clsAsteroid.o: clsAsteroid.cpp clsAsteroid.h globalStuff.h
 	$(CXX) $(CPPFLAGS) -c -o obj/clsAsteroid.o clsAsteroid.cpp
-
-obj/globalStuff.o: globalStuff.cpp globalStuff.h
-	$(CXX) $(CPPFLAGS) -c -o obj/globalStuff.o globalStuff.cpp
 
 clean:
 	rm -f $(TARGET) $(OBJS) $(OPK)
