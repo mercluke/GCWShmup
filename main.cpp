@@ -68,9 +68,6 @@ int main(int argc, char* args[])
 				}
 
 
-				//debug
-				std::cout << "bonusAmmo: " << bonusAmmo << "\nBONUSAMMO: " << BONUSAMMO << "\nScore: " << score << "\nBULLETBONUS: " << BULLETBONUS << "\n(score%BULLETBONUS): " << (score%BULLETBONUS) << "\n\n";
-
 				snprintf(scoreText, 99, "Score: %i", score);
 				count();
 				moveObjects();
