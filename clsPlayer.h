@@ -1,13 +1,12 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include "globalConstants.h"
+#include "globalStuff.h"
 
 class clsPlayer
 {
 public:
 	clsPlayer(void);
 	~clsPlayer(void);
-	//void setPicture(LPDIRECT3DDEVICE9 dev);
 	void draw(SDL_Surface* screen);
 	void setXY(int x, int y);
 	int getX();
@@ -23,12 +22,12 @@ private:
 	static const int NUMFRAMES = 3;
 	static const int FRAMEWIDTH = 16;
 	static const int FRAMEHEIGHT = 16;
+	static const float SPEEDMODIFIER = 0.5;
 	int frame;
 	SDL_Rect view;
 	float xPos;
 	float yPos;
 	SDL_Rect pos;
-	//float rotate;
 	SDL_Surface* sprite;
 	int hp;
 };

@@ -1,5 +1,5 @@
-#ifndef GLOBALCONSTANTS_H
-#define GLOBALCONSTANTS_H
+#ifndef GLOBALSTUFF_H
+#define GLOBALSTUFF_H
 #define SCREEN_WIDTH		320
 #define SCREEN_HEIGHT		240
 #define SPEED				1.0
@@ -11,7 +11,13 @@
 #define	DIR_DRIFT			4
 
 #include <iostream>
+#include <ctime>
 #include "SDL/SDL.h"
 #include "SDL/SDL_image.h"
 #include "SDL/SDL_ttf.h"
+
+void nsrand(unsigned nseed);
+unsigned nrand(void);
+
+static unsigned seed;
 #endif

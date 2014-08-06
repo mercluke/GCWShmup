@@ -1,6 +1,6 @@
 #ifndef BULLET_H
 #define BULLET_H
-#include "globalConstants.h"
+#include "globalStuff.h"
 
 class clsBullet
 {
@@ -8,7 +8,6 @@ public:
 	clsBullet(void);
 	~clsBullet(void);
 	clsBullet* bulletNext;
-	//void setPicture(LPDIRECT3DDEVICE9 dev);
 	void draw(SDL_Surface* screen);
 	void setXY(int x, int y);
 	int getX();

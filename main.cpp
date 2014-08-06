@@ -10,7 +10,7 @@
 int main(int argc, char* args[])
 {
 	int quit = 0;
-	srand((unsigned)time(NULL)); //generates random number based on time as rand()
+	nsrand((unsigned)time(NULL)); //generates random number based on time as rand()
 
     // enter the main loop
 
@@ -33,46 +33,65 @@ int main(int argc, char* args[])
     while(!quit)
     {
 
-        //DWORD starting_point = GetTickCount();
-
-        /*if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-        {
-            if (msg.message == WM_QUIT)
-                break;
-
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
-        }*/
-
         SDL_PumpEvents();
 
-		if(!gameOver)
+    	if(keystate[SDLK_RETURN] && !gameOver)
 		{
-			//this gross bool stops it just giving you infinite health before you change scores
-			if(!gotHealthPack && !(score%HEALTHBONUS))
+			//wait until key up else game doesn't pause
+			while(keystate[SDLK_RETURN])
 			{
-				plane.upHP(1);
-				gotHealthPack == true;
-			}
-			else if(score%HEALTHBONUS)
-			{
-				gotHealthPack = false;
+				SDL_PumpEvents();
 			}
 
-			snprintf(scoreText, 99, "Score: %i", score);
-			count();
-			moveObjects();
-			killObjects();
+			gamePaused = !gamePaused;
 		}
-		else
-		{
-			if(keystate[SDLK_RETURN])
+
+        if(!gamePaused)
+        {
+			if(!gameOver)
 			{
-				restartGame();
+				//this gross bool stops it just giving you infinite health before you change scores
+				if(!gotHealthPack && !(score%HEALTHBONUS) && score)
+				{
+					plane.upHP(1);
+					gotHealthPack == true;
+				}
+				else if(score%HEALTHBONUS)
+				{
+					gotHealthPack = false;
+				}
+
+				if(!bonusAmmo && !(score%BULLETBONUS) && score)
+				{
+					bonusAmmo = BONUSAMMO;
+					bulletFreq = 1;
+				}
+
+
+				//debug
+				std::cout << "bonusAmmo: " << bonusAmmo << "\nBONUSAMMO: " << BONUSAMMO << "\nScore: " << score << "\nBULLETBONUS: " << BULLETBONUS << "\n(score%BULLETBONUS): " << (score%BULLETBONUS) << "\n\n";
+
+				snprintf(scoreText, 99, "Score: %i", score);
+				count();
+				moveObjects();
+				killObjects();
 			}
-			loseGame();
+			else
+			{
+				loseGame();
+				if(keystate[SDLK_RETURN])
+				{
+					//wait until key up else game pauses
+					while(keystate[SDLK_RETURN])
+					{
+						SDL_PumpEvents();
+					}
+					restartGame();
+				}
+			}
+
+			render_frame();
 		}
-		render_frame();
 
         // check the 'L' or 'R' shoulder buttons
         if((keystate[SDLK_TAB]) && (keystate[SDLK_BACKSPACE])){
@@ -153,20 +172,10 @@ void render_frame(void)
     return;
 }
 
-
-// this is the function that cleans up Direct3D and COM
-/*void cleanD3D(void)
-{
-    d3ddev->Release();
-    d3d->Release();
-
-    return;
-}*/
-
 void count()
 {
 	counter++;
-	frequency -= 0.01;
+	frequency -= 0.001;
 	if(frequency < 1)
 	{
 		frequency = 1;
@@ -174,6 +183,8 @@ void count()
 }
 void moveObjects()
 {
+
+
 	bg.move();
 
 	if(keystate[SDLK_UP])
@@ -199,11 +210,11 @@ void moveObjects()
 	{
 		plane.move(DIR_RIGHT);
 	}
-	if(((counter%damageModifier)==0) && keystate[SDLK_LCTRL])
+	if(!(counter%bulletFreq) && keystate[SDLK_LCTRL])
 	{
 		addBulletToList(plane.getX(), plane.getY());
 	}
-	if((counter%(int)frequency)==0)
+	if(((counter)%(int)frequency)==0)
 	{
 		addAsteroidToList();
 	}
@@ -219,7 +230,7 @@ void killObjects()
 		bulletTemp = bulletHead;
 		while(bulletTemp!=NULL)
 		{
-			asteroidTemp->takeDamage(bulletTemp->collide(asteroidTemp->getX(),asteroidTemp->getY())/*, g_pSoundManager*/); //checks all bullets for collisions with all asteroids
+			asteroidTemp->takeDamage(bulletTemp->collide(asteroidTemp->getX(),asteroidTemp->getY())); //checks all bullets for collisions with all asteroids
 			bulletTemp=bulletTemp->bulletNext;
 		}
 		gameOver = plane.collide(asteroidTemp->getX(),asteroidTemp->getY(), plane.getHP());
@@ -237,8 +248,16 @@ void addBulletToList(float x, float y)
 	//create new bullet object
 	clsBullet* bulletTemp;
 	bulletTemp = new clsBullet;
-	//bulletTemp->setPicture(d3ddev);
 	bulletTemp->setXY(x,y);
+
+	if(bonusAmmo > 0)
+	{
+		bonusAmmo--;
+	}
+	else
+	{
+		bulletFreq = BULLETFREQ;
+	}
 
 	//add new bullet to start of linked list
 	bulletTemp->bulletNext = bulletHead;
@@ -278,7 +297,7 @@ void removeBulletFromList()
 				delete bulletCurrent;
 				return;
 			}
-			//point to next objects in list
+			//point to next object in list
 			bulletPrevious=bulletCurrent;
 			bulletCurrent=bulletCurrent->bulletNext;
 		}
@@ -289,20 +308,11 @@ void addAsteroidToList()
 {
 	//create new asteroid object
 	clsAsteroid* asteroidTemp;
-	if(counter%5 == 0)
-	{
-		asteroidTemp = new clsAsteroid;
-		//add new asteroid to start of linked list
-		asteroidTemp->asteroidNext = asteroidHead;
-		asteroidHead = asteroidTemp;
-	}
-	else
-	{
-		//diff asteroid, change later
-		//asteroidTemp = new clsAsteroid;
-	}
-	//asteroidTemp->setPicture(d3ddev);
-
+	
+	asteroidTemp = new clsAsteroid;
+	//add new asteroid to start of linked list
+	asteroidTemp->asteroidNext = asteroidHead;
+	asteroidHead = asteroidTemp;
 	
 }
 
@@ -363,7 +373,8 @@ void removeAsteroidFromList()
 
 void loseGame()
 {
-	scorePos.x = 0;
+	gamePaused = false;
+	scorePos.x = GAMEOVEROFFSET;
     scorePos.w = SCREEN_WIDTH;
 	sprintf(scoreText, "RIP | L+R to quit | Start to replay | Score: %i", score);
 }
@@ -382,11 +393,13 @@ void restartGame()
 	}
 	plane.reset();
 	gameOver = false;
-	damageModifier = 4;
-	frequency = 100;
+	gamePaused = false;
+	bulletFreq = BULLETFREQ;
+	bonusAmmo = 0;
+	frequency = FREQUENCY;
 	counter = 1;
 	score = 0;
-	scorePos.x = (SCREEN_WIDTH/3);
+	scorePos.x = (SCREEN_WIDTH/3)+SCOREOFFSET;
     scorePos.y = 0;
     scorePos.h = 12;
     scorePos.w = 40;
@@ -394,15 +407,6 @@ void restartGame()
 
 void keepScore()
 {
-	// create a RECT to contain the text
-    //static RECT textbox; SetRect(&textbox, 0, 0, SCREEN_WIDTH, 75);
-	//dxfont->DrawTextA(NULL,
-    //                  scoreText,
-    //                  -1,
-    //                  &textbox,
-    //                  DT_CENTER | 0,
-    //                  D3DCOLOR_ARGB(255, 255, 255, 255));
-
     if(font != NULL)
     {
     	text = TTF_RenderText_Solid(font, scoreText, text_color);

@@ -23,25 +23,6 @@ void clsPlayer::reset(void)
 	hp = FULLHEALTH;
 }
 
-
-/*void clsPlayer::setPicture(LPDIRECT3DDEVICE9 dev)
-{
-	D3DXCreateTextureFromFileEx(dev,    // the device pointer
-                                L"data/plane.png",    // the file name
-                                D3DX_DEFAULT,    // default width
-                                D3DX_DEFAULT,    // default height
-                                D3DX_DEFAULT,    // no mip mapping
-                                NULL,    // regular usage
-                                D3DFMT_A8R8G8B8,    // 32-bit pixels with alpha
-                                D3DPOOL_MANAGED,    // typical memory handling
-                                D3DX_DEFAULT,    // no filtering
-                                D3DX_DEFAULT,    // no mip filtering
-                                D3DCOLOR_XRGB(255, 0, 255),    // the hot-pink color key
-                                NULL,    // no image info struct
-                                NULL,    // not using 256 colors
-                                &sprite);    // load to sprite
-}*/
-
 void clsPlayer::draw(SDL_Surface* screen)
 {
 
@@ -110,18 +91,20 @@ void clsPlayer::move(int direction)
 		}
 		else
 		{
-			xPos-=SPEED;
+			//closer you are to the top of the screen, the faster you strafe
+			xPos-=(SPEED + (SPEEDMODIFIER - ((SPEEDMODIFIER / (SCREEN_HEIGHT-FRAMEHEIGHT))*yPos)));
 		}
 	}
-	else if(direction == DIR_RIGHT && xPos < (SCREEN_WIDTH-(FRAMEWIDTH-1)))//right - Note: plane is 1 pixel off on the right side
+	else if(direction == DIR_RIGHT && xPos < (SCREEN_WIDTH-(FRAMEWIDTH)))
 	{
-		if(xPos > ((SCREEN_WIDTH-(FRAMEWIDTH-1))-SPEED))
+		if(xPos > ((SCREEN_WIDTH-(FRAMEWIDTH))-SPEED))
 		{
-			xPos = (SCREEN_WIDTH-(FRAMEWIDTH-1));
+			xPos = (SCREEN_WIDTH-(FRAMEWIDTH));
 		}
 		else
 		{
-		xPos+=SPEED;
+			//closer you are to the top of the screen, the faster you strafe
+			xPos+=(SPEED + (SPEEDMODIFIER - ((SPEEDMODIFIER / (SCREEN_HEIGHT-FRAMEHEIGHT))*yPos)));
 		}
 	}
 	else if(direction == DIR_DRIFT && yPos < (SCREEN_HEIGHT-FRAMEHEIGHT))//downward drift

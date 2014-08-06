@@ -21,36 +21,6 @@ clsHealthBar::~clsHealthBar(void)
 	SDL_FreeSurface(sprite);
 }
 
-/*void clsHealthBar::setPicture(LPDIRECT3DDEVICE9 dev)
-{
-	D3DXCreateTextureFromFileEx(dev, L"data/health.png",    // the file name
-                                D3DX_DEFAULT,    // default width
-                                D3DX_DEFAULT,    // default height
-                                D3DX_DEFAULT,    // no mip mapping
-                                NULL,    // regular usage
-                                D3DFMT_A8R8G8B8,    // 32-bit pixels with alpha
-                                D3DPOOL_MANAGED,    // typical memory handling
-                                D3DX_DEFAULT,    // no filtering
-                                D3DX_DEFAULT,    // no mip filtering
-                                D3DCOLOR_XRGB(255, 0, 255),    // the hot-pink color key
-                                NULL,    // no image info struct
-                                NULL,    // not using 256 colors
-                                &sprite);    // load to sprite
-	D3DXCreateTextureFromFileEx(dev, L"data/healthEdge.png",    // the file name
-                                D3DX_DEFAULT,    // default width
-                                D3DX_DEFAULT,    // default height
-                                D3DX_DEFAULT,    // no mip mapping
-                                NULL,    // regular usage
-                                D3DFMT_A8R8G8B8,    // 32-bit pixels with alpha
-                                D3DPOOL_MANAGED,    // typical memory handling
-                                D3DX_DEFAULT,    // no filtering
-                                D3DX_DEFAULT,    // no mip filtering
-                                D3DCOLOR_XRGB(255, 0, 255),    // the hot-pink color key
-                                NULL,    // no image info struct
-                                NULL,    // not using 256 colors
-                                &spriteEdge);    // load to sprite
-}*/
-
 void clsHealthBar::draw(SDL_Surface* screen, int hp)
 {
     posEdge.x = view.w;

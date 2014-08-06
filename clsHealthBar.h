@@ -1,6 +1,6 @@
 #ifndef HEALTHBAR_H
 #define HEALTHBAR_H
-#include "globalConstants.h"
+#include "globalStuff.h"
 class clsHealthBar
 {
 public:

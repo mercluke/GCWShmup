@@ -1,13 +1,12 @@
 #ifndef ASTEROID_H
 #define ASTEROID_H
-#include "globalConstants.h"
+#include "globalStuff.h"
 
 class clsAsteroid
 {
 public:
 	clsAsteroid(void);
 	~clsAsteroid(void);
-	//virtual void setPicture(LPDIRECT3DDEVICE9 dev);
 	void draw(SDL_Surface* screen);
 	void move();
 	void setXY(int x, int y);

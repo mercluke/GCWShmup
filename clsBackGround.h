@@ -1,6 +1,6 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
-#include "globalConstants.h"
+#include "globalStuff.h"
 
 class clsBackGround
 {
@@ -8,7 +8,6 @@ public:
 	clsBackGround(void);
 	~clsBackGround(void);
 	void constructor();
-	//void setPicture(LPDIRECT3DDEVICE9 dev);
 	void draw(SDL_Surface* screen);
 	void move();
 
