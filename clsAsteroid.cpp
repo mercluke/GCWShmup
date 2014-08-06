@@ -24,16 +24,17 @@ clsAsteroid::~clsAsteroid(void)
 
 void clsAsteroid::freeList()
 {
-	if(asteroidNext != NULL)
-	{
-		asteroidNext->freeList();
-		delete this;
-	}
 	if(sprite != NULL)
 	{
 		SDL_FreeSurface(sprite);
 		sprite = NULL;
 	}
+	
+	if(asteroidNext != NULL)
+	{
+		asteroidNext->freeList();
+	}
+	delete this;
 }
 
 void clsAsteroid::setXY(int x, int y) //not used atm but w/e

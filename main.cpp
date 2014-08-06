@@ -10,7 +10,6 @@
 int main(int argc, char* args[])
 {
 	int quit = 0;
-
 	srand((unsigned)time(NULL)); //generates random number based on time as rand()
 
 
@@ -43,6 +42,7 @@ int main(int argc, char* args[])
     //MSG msg;
 
     SDL_Init(SDL_INIT_VIDEO);
+    keystate = SDL_GetKeyState(NULL);
     //TTF_Init();
 
     //font = TTF_OpenFont("FreeSans.ttf", 24);
@@ -66,12 +66,7 @@ int main(int argc, char* args[])
             DispatchMessage(&msg);
         }*/
 
-        SDL_PollEvent(&event);
-
-        if(event.type == SDL_QUIT)
-        {
-        	quit = 1;
-        }
+        SDL_PumpEvents();
 
 		if(!gameOver)
 		{
@@ -93,7 +88,7 @@ int main(int argc, char* args[])
 		}
 		else
 		{
-			if(KEY_DOWN(SDLK_RETURN))
+			if(keystate[SDLK_RETURN])
 			{
 				restartGame();
 			}
@@ -102,7 +97,7 @@ int main(int argc, char* args[])
 		render_frame();
 
         // check the 'L' or 'R' shoulder buttons
-        if((KEY_DOWN(SDLK_TAB)) || (KEY_DOWN(SDLK_BACKSPACE))){
+        if((keystate[SDLK_TAB]) && (keystate[SDLK_BACKSPACE])){
             quit = 1;
         }
  
@@ -203,11 +198,11 @@ void moveObjects()
 {
 	bg.move();
 
-	if(KEY_DOWN(SDLK_UP))
+	if(keystate[SDLK_UP])
 	{
 		plane.move(DIR_UP);
 	}
-	else if(KEY_DOWN(SDLK_DOWN))
+	else if(keystate[SDLK_DOWN])
 	{
 		plane.move(DIR_DOWN);
 	}
@@ -218,15 +213,15 @@ void moveObjects()
 			plane.move(DIR_DRIFT);
 		}
 	}
-	if(KEY_DOWN(SDLK_LEFT))
+	if(keystate[SDLK_LEFT])
 	{
 		plane.move(DIR_LEFT);
 	}
-	if(KEY_DOWN(SDLK_RIGHT))
+	if(keystate[SDLK_RIGHT])
 	{
 		plane.move(DIR_RIGHT);
 	}
-	if(((counter%damageModifier)==0) && KEY_DOWN(SDLK_LCTRL))
+	if(((counter%damageModifier)==0) && keystate[SDLK_LCTRL])
 	{
 		addBulletToList(plane.getX(), plane.getY());
 	}

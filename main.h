@@ -6,12 +6,10 @@
 #include "clsAsteroid.h"
 #include "clsHealthBar.h"
 #include "clsBackGround.h"
-#define KEY_DOWN(x) (event.type == SDL_KEYDOWN && event.key.keysym.sym == x)
 #define DELAY 20
 
 
 // define the screen resolution and keyboard macros
-SDL_Event event;
 SDL_Surface* screen = NULL;
 SDL_Surface* text;
 SDL_Color text_color = {255,255,255};
@@ -55,4 +53,5 @@ bool gotHealthPack = false;
 static const int HEALTHBONUS = 50;
 int damageModifier; //higher number == lower damage
 char scoreText[100];
+Uint8 *keystate;
 #endif
