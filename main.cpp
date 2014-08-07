@@ -12,6 +12,16 @@ int main(int argc, char* args[])
 	int quit = 0;
 	srand((unsigned)time(NULL)); //generates random number based on time as rand()
 
+	scoreFile = fopen(".GCWShmup","rb");
+	if(scoreFile != NULL)
+	{
+		if(fscanf(scoreFile, "%d\n", &highScore) != 1)
+		{
+			highScore = 0;
+		}
+		fclose(scoreFile);
+	}
+
     // enter the main loop
 
     SDL_Init(SDL_INIT_VIDEO);
@@ -37,6 +47,12 @@ int main(int argc, char* args[])
 
     	if(keystate[SDLK_RETURN] && !gameOver)
 		{
+			if(font != NULL)
+    		{
+	    		text = TTF_RenderText_Solid(font, "-paused-", text_color);
+	    		SDL_BlitSurface(text, NULL, screen, &highScorePos);
+			}
+
 			//wait until key up else game doesn't pause
 			while(keystate[SDLK_RETURN])
 			{
@@ -61,14 +77,14 @@ int main(int argc, char* args[])
 					gotHealthPack = false;
 				}
 
-				if(!bonusAmmo && !(score%BULLETBONUS) && score)
+				if(!(score%BULLETBONUS) && score)
 				{
 					bonusAmmo = BONUSAMMO;
 					bulletFreq = 1;
 				}
 
 
-				snprintf(scoreText, 99, "Score: %i", score);
+				sprintf(scoreText, "Score: %i", score);
 				count();
 				moveObjects();
 				killObjects();
@@ -91,7 +107,8 @@ int main(int argc, char* args[])
 		}
 
         // check the 'L' or 'R' shoulder buttons
-        if((keystate[SDLK_TAB]) && (keystate[SDLK_BACKSPACE])){
+        if((keystate[SDLK_TAB] && keystate[SDLK_BACKSPACE]) || keystate[SDL_QUIT])
+        {
             quit = 1;
         }
  
@@ -110,7 +127,7 @@ int main(int argc, char* args[])
 		bulletHead = NULL;
 	}
 
-	//TTF_Quit();
+	TTF_Quit();
 
  	SDL_Quit();
 
@@ -164,7 +181,7 @@ void render_frame(void)
 
     SDL_Flip(screen);
 
-    //SDL_Delay(DELAY);
+    SDL_Delay(DELAY);
 
     return;
 }
@@ -207,7 +224,7 @@ void moveObjects()
 	{
 		plane.move(DIR_RIGHT);
 	}
-	if(!(counter%bulletFreq) && keystate[SDLK_LCTRL])
+	if(!(counter%bulletFreq) && (keystate[SDLK_SPACE] || keystate[SDLK_LCTRL]) )
 	{
 		addBulletToList(plane.getX(), plane.getY());
 	}
@@ -374,6 +391,18 @@ void loseGame()
 	scorePos.x = GAMEOVEROFFSET;
     scorePos.w = SCREEN_WIDTH;
 	sprintf(scoreText, "RIP | L+R to quit | Start to replay | Score: %i", score);
+	if(score > highScore)
+	{
+		highScore = score;
+
+		scoreFile = fopen(".GCWShmup", "wb");
+		if(scoreFile != NULL)
+		{
+			fprintf(scoreFile, "%d\n", highScore);
+			fclose(scoreFile);
+			sprintf(highScoreText, "New High Score!   %i", highScore);
+		}
+	}
 }
 
 void restartGame()
@@ -396,10 +425,15 @@ void restartGame()
 	frequency = FREQUENCY;
 	counter = 1;
 	score = 0;
-	scorePos.x = (SCREEN_WIDTH/3)+SCOREOFFSET;
+	scorePos.x = SCOREOFFSET;
     scorePos.y = 0;
     scorePos.h = 12;
     scorePos.w = 40;
+    sprintf(highScoreText, "High Score:   %i", highScore);
+    highScorePos.x = (SCREEN_WIDTH/2);
+    highScorePos.y = SCREEN_HEIGHT/2;
+    highScorePos.h = 12;
+    highScorePos.w = (SCREEN_WIDTH-highScorePos.y);
 }
 
 void keepScore()
@@ -408,5 +442,11 @@ void keepScore()
     {
     	text = TTF_RenderText_Solid(font, scoreText, text_color);
     	SDL_BlitSurface(text, NULL, screen, &scorePos);
+
+    	if(gameOver)
+    	{
+	    	text = TTF_RenderText_Solid(font, highScoreText, text_color);
+			SDL_BlitSurface(text, NULL, screen, &highScorePos);
+		}
 	}
 }

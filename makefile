@@ -37,4 +37,4 @@ obj/clsAsteroid.o: clsAsteroid.cpp clsAsteroid.h globalStuff.h
 	$(CXX) $(CPPFLAGS) -c -o obj/clsAsteroid.o clsAsteroid.cpp
 
 clean:
-	rm -f $(TARGET) $(OBJS) $(OPK)
+	rm -f $(TARGET) $(OBJS) $(OPK) bin/.GCWShmup

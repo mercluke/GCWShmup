@@ -6,7 +6,7 @@
 #include "clsAsteroid.h"
 #include "clsHealthBar.h"
 #include "clsBackGround.h"
-#define DELAY 20
+#define DELAY 4
 
 //Starting value for asteroid spawn frequency
 #define FREQUENCY 100
@@ -15,13 +15,13 @@
 //number of pixels game over message is from edge of screen
 #define GAMEOVEROFFSET 17
 //number of pixel score text is from 3rd of screen
-#define SCOREOFFSET 30
+#define SCOREOFFSET (SCREEN_WIDTH/3)+30
 //mod score by this for when to get health bonus
-#define HEALTHBONUS 100
+#define HEALTHBONUS 200
 //mod score by this for when to get bullet powerup
-#define BULLETBONUS 500
+#define BULLETBONUS 1000
 //how many bullets to fire before losing powerup
-#define BONUSAMMO 1000
+#define BONUSAMMO 500
 
 
 // define the screen resolution and keyboard macros
@@ -34,6 +34,7 @@ clsBackGround bg;
 clsHealthBar hp;
 clsAsteroid* asteroidHead;
 clsBullet* bulletHead;
+FILE* scoreFile;
 
 
 // function prototypes
@@ -57,12 +58,15 @@ int counter; //used for gravity and the like...  - well not gravity since it's b
 float frequency;
 bool gameOver;
 bool gamePaused;
-int score;
+int score = 0;
+int highScore = 0;
 bool gotHealthPack = false;
 int bonusAmmo;
 //static const int FREQMODIFIER = 10;
 int bulletFreq; //higher number == lower damage
 char scoreText[100];
+char highScoreText[100];
 SDL_Rect scorePos;
+SDL_Rect highScorePos;
 Uint8 *keystate;
 #endif

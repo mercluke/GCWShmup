@@ -22,7 +22,7 @@ private:
 	static const int NUMFRAMES = 3;
 	static const int FRAMEWIDTH = 16;
 	static const int FRAMEHEIGHT = 16;
-	static const float SPEEDMODIFIER = 0.5;
+	static const float SPEEDMODIFIER = 1;
 	int frame;
 	SDL_Rect view;
 	float xPos;

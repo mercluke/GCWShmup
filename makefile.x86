@@ -1,0 +1,35 @@
+TARGET := bin/GCWShmup
+OBJS := obj/main.o obj/clsPlayer.o obj/clsHealthBar.o obj/clsBullet.o obj/clsBackGround.o obj/clsAsteroid.o
+CXX := $(CROSS_COMPILE)g++
+
+
+DEPENDENCIES := -lSDL_image -lSDL_ttf
+
+SYSROOT := $(shell $(CXX) --print-sysroot)
+SDL_CFLAGS := $(shell sdl-config --cflags)
+SDL_LDFLAGS := $(shell sdl-config --libs) $(DEPENDENCIES) 
+
+
+$(TARGET): $(OBJS)
+	$(CXX) $(SDL_CFLAGS) $^ -o $@ $(SDL_LDFLAGS) 
+
+obj/main.o: main.cpp main.h globalStuff.h clsPlayer.h clsBullet.h clsAsteroid.h clsHealthBar.h clsBackGround.h
+	$(CXX) $(SDL_CFLAGS) -c -o obj/main.o main.cpp
+
+obj/clsPlayer.o: clsPlayer.cpp clsPlayer.h globalStuff.h
+	$(CXX) $(SDL_CFLAGS) -c -o obj/clsPlayer.o clsPlayer.cpp
+
+obj/clsHealthBar.o: clsHealthBar.cpp clsHealthBar.h globalStuff.h
+	$(CXX) $(SDL_CFLAGS) -c -o obj/clsHealthBar.o clsHealthBar.cpp
+
+obj/clsBullet.o: clsBullet.cpp clsBullet.h globalStuff.h
+	$(CXX) $(SDL_CFLAGS) -c -o obj/clsBullet.o clsBullet.cpp
+
+obj/clsBackGround.o: clsBackGround.cpp clsBackGround.h globalStuff.h
+	$(CXX) $(SDL_CFLAGS) -c -o obj/clsBackGround.o clsBackGround.cpp
+
+obj/clsAsteroid.o: clsAsteroid.cpp clsAsteroid.h globalStuff.h
+	$(CXX) $(SDL_CFLAGS) -c -o obj/clsAsteroid.o clsAsteroid.cpp
+
+clean:
+	rm -f $(TARGET) $(OBJS) $(OPK)
