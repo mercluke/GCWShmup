@@ -1,8 +1,8 @@
-//#include "StdAfx.h"
 #include "clsHealthBar.h"
 
 clsHealthBar::clsHealthBar(void)
 {
+    //load bitmaps
     sprite = SDL_LoadBMP("data/health.bmp");
     sprEdge = SDL_LoadBMP("data/healthEdge.bmp");
     SDL_SetColorKey(sprite, SDL_SRCCOLORKEY, SDL_MapRGB(sprite->format, 255, 0, 255));
@@ -21,6 +21,7 @@ clsHealthBar::~clsHealthBar(void)
 	SDL_FreeSurface(sprite);
 }
 
+//draw bar onscreen
 void clsHealthBar::draw(SDL_Surface* screen, int hp)
 {
     posEdge.x = view.w;

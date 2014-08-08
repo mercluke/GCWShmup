@@ -9,6 +9,19 @@
 #define	DIR_LEFT			2
 #define	DIR_RIGHT			3
 #define	DIR_DRIFT			4
+#define DELAY 				4
+//Starting value for asteroid spawn frequency
+#define FREQUENCY 			100
+//Starting value for bullet firing rate
+#define BULLETFREQ 			12
+//mod score by this for when to get health bonus
+#define HEALTHBONUS 		200
+//mod score by this for when to get bullet powerup
+#define BULLETBONUS 		1000
+//how many bullets to fire before losing powerup
+#define BONUSAMMO 			500
+//rough guess of a character pixel width
+#define CHARWIDTH 			6
 
 #include <iostream>
 #include <ctime>

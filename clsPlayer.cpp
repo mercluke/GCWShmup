@@ -2,16 +2,19 @@
 
 clsPlayer::clsPlayer(void)
 {
+	//load bitmap for player's plane
 	sprite = SDL_LoadBMP("data/plane.bmp");
     SDL_SetColorKey(sprite, SDL_SRCCOLORKEY, SDL_MapRGB(sprite->format, 255, 0, 255));
     reset();
 }
 
+//unload bitmap
 clsPlayer::~clsPlayer(void)
 {
 	SDL_FreeSurface(sprite);
 }
 
+//intial values
 void clsPlayer::reset(void)
 {
 	frame = 0;
@@ -23,10 +26,11 @@ void clsPlayer::reset(void)
 	hp = FULLHEALTH;
 }
 
+//display player onscreen
 void clsPlayer::draw(SDL_Surface* screen)
 {
 
-
+	//animate player
     if(frame == NUMFRAMES) 
     	{frame=0;}
     else if(frame < NUMFRAMES) 
@@ -59,6 +63,7 @@ int clsPlayer::getY()
 
 }
 
+//move player
 void clsPlayer::move(int direction)
 {
 	if(direction == DIR_UP && yPos > 0)//up
@@ -95,7 +100,7 @@ void clsPlayer::move(int direction)
 			xPos-=(SPEED + (SPEEDMODIFIER - ((SPEEDMODIFIER / (SCREEN_HEIGHT-FRAMEHEIGHT))*yPos)));
 		}
 	}
-	else if(direction == DIR_RIGHT && xPos < (SCREEN_WIDTH-(FRAMEWIDTH)))
+	else if(direction == DIR_RIGHT && xPos < (SCREEN_WIDTH-(FRAMEWIDTH)))//right
 	{
 		if(xPos > ((SCREEN_WIDTH-(FRAMEWIDTH))-SPEED))
 		{
@@ -120,6 +125,7 @@ void clsPlayer::move(int direction)
 	}
 }
 
+//player damaged
 bool clsPlayer::takeDamage(int damage)
 {
 	if(hp > damage)
@@ -134,6 +140,7 @@ bool clsPlayer::takeDamage(int damage)
 	}
 }
 
+//player crashed
 bool clsPlayer::collide(float AsteroidX, float AsteroidY, int damage)
 {
 	if((xPos+FRAMEWIDTH) > AsteroidX && xPos < (AsteroidX+FRAMEWIDTH))
@@ -147,12 +154,15 @@ bool clsPlayer::collide(float AsteroidX, float AsteroidY, int damage)
 	return false;
 }
 
+
 int clsPlayer::getHP()
 {
 	return hp;
 }
 
+//health pack
 void clsPlayer::upHP(int bonus)
 {
+	//cap hp at "FULLHEALTH"
 	hp = (bonus+hp <= FULLHEALTH) ? bonus+hp : FULLHEALTH;
 }

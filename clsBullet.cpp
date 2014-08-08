@@ -1,4 +1,3 @@
-//#include "StdAfx.h"
 #include "clsBullet.h"
 
 SDL_Surface* clsBullet::sprite = NULL;
@@ -8,9 +7,11 @@ clsBullet::clsBullet(void)
 	bulletNext=NULL;
 	dead = false;
 
+	//only load the bitmap once rather than for each bullet
 	if(sprite == NULL)
 	{
 		sprite = SDL_LoadBMP("data/bullet.bmp");
+		//hot pink is transparent
     	SDL_SetColorKey(sprite, SDL_SRCCOLORKEY, SDL_MapRGB(sprite->format, 255, 0, 255));
 	}
 }
@@ -20,21 +21,22 @@ clsBullet::~clsBullet(void)
 }
 
 
+//recursively kill entire list
 void clsBullet::freeList()
 {
-	if(bulletNext != NULL)
-	{
-		bulletNext->freeList();
-		delete this;
-	}
 	if(sprite != NULL)
 	{
 		SDL_FreeSurface(sprite);
 		sprite = NULL;
 	}
+	if(bulletNext != NULL)
+	{
+		bulletNext->freeList();
+	}
+	delete this;
 }
 
-
+//draw bullet to screen
 void clsBullet::draw(SDL_Surface* screen)
 {
     pos.x = xPos;
@@ -42,6 +44,7 @@ void clsBullet::draw(SDL_Surface* screen)
     SDL_BlitSurface(sprite, NULL, screen, &pos);
 }
 
+//change position of bullet (make it spawn in front of player)
 void clsBullet::setXY(int x, int y)
 {
 	xPos = x;
@@ -61,15 +64,18 @@ int clsBullet::getY()
 
 }
 
+//move bullet
 void clsBullet::move(int direction)
 {
 	if(direction == DIR_UP)//up
 	{
+		//move up
 		if(yPos > 0)
 		{
 			yPos-=(SPEED*3);
 
 		}
+		//bullet went offscreen
 		else 
 		{
 			yPos = 0;
@@ -83,6 +89,7 @@ bool clsBullet::checkDead()
 	return dead;
 }
 
+//check collision with asteroid
 bool clsBullet::collide(float AsteroidX, float AsteroidY)
 {
 	if((xPos+FRAME_HEIGHT) > AsteroidX && xPos < (AsteroidX+FRAME_HEIGHT))

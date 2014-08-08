@@ -1,20 +1,23 @@
 ///////////////////////////////////////////////////////////////
-///////////////////////SteveShmup v0.09///////////////////////
+///////////////////////SteveShmup v0.10///////////////////////
 ////////////////////////by Luke Mercuri////////////////////////
-//////////////////////////25/05/2010///////////////////////////
+//////////////////////////08/08/2014///////////////////////////
 ///////////////////////////////////////////////////////////////
 
 #include "main.h" 
 
-// the entry point for any Windows program
+
+//enter the main loop
 int main(int argc, char* args[])
 {
 	int quit = 0;
-	srand((unsigned)time(NULL)); //generates random number based on time as rand()
+	srand((unsigned)time(NULL)); //seed rand()
 
+	//file we store high score in
 	scoreFile = fopen(".GCWShmup","rb");
 	if(scoreFile != NULL)
 	{
+		//if didn't read out an int from file then no current high score
 		if(fscanf(scoreFile, "%d\n", &highScore) != 1)
 		{
 			highScore = 0;
@@ -22,76 +25,55 @@ int main(int argc, char* args[])
 		fclose(scoreFile);
 	}
 
-    // enter the main loop
-
+	//setup sdl video/input/font rendering
     SDL_Init(SDL_INIT_VIDEO);
     keystate = SDL_GetKeyState(NULL);
     TTF_Init();
 
+    //try to load font from file
     font = TTF_OpenFont("data/TerminusTTF-4.39.ttf", 12);
-
    	if(font == NULL)
    	{
    		std::cout << "error loading font\n";
    	}
 
+   	//set screen resolution and stop sdl showing a mouse pointer
     screen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_SWSURFACE);
     SDL_ShowCursor(SDL_DISABLE);
 
+    //initial assorted variables
 	restartGame();
 
     while(!quit)
     {
 
+    	//check keypresses
         SDL_PumpEvents();
 
     	if(keystate[SDLK_RETURN] && !gameOver)
 		{
-			if(font != NULL)
-    		{
-	    		text = TTF_RenderText_Solid(font, "-paused-", text_color);
-	    		SDL_BlitSurface(text, NULL, screen, &highScorePos);
-			}
-
-			//wait until key up else game doesn't pause
-			while(keystate[SDLK_RETURN])
-			{
-				SDL_PumpEvents();
-			}
-
-			gamePaused = !gamePaused;
+			pauseGame();
 		}
+
 
         if(!gamePaused)
         {
+        	//still playing
 			if(!gameOver)
 			{
-				//this gross bool stops it just giving you infinite health before you change scores
-				if(!gotHealthPack && !(score%HEALTHBONUS) && score)
-				{
-					plane.upHP(1);
-					gotHealthPack == true;
-				}
-				else if(score%HEALTHBONUS)
-				{
-					gotHealthPack = false;
-				}
-
-				if(!(score%BULLETBONUS) && score)
-				{
-					bonusAmmo = BONUSAMMO;
-					bulletFreq = 1;
-				}
-
-
+				bonusItems();
 				sprintf(scoreText, "Score: %i", score);
+				scorePos.x = (SCREEN_WIDTH/2)-((CHARWIDTH/2)*strlen(scoreText));
 				count();
 				moveObjects();
 				killObjects();
 			}
+			//player died
 			else
 			{
 				loseGame();
+
+				//restart game by pressing start/enter
 				if(keystate[SDLK_RETURN])
 				{
 					//wait until key up else game pauses
@@ -103,10 +85,11 @@ int main(int argc, char* args[])
 				}
 			}
 
+			//draw to screen
 			render_frame();
 		}
 
-        // check the 'L' or 'R' shoulder buttons
+        // check the 'L' and 'R' shoulder buttons to quit
         if((keystate[SDLK_TAB] && keystate[SDLK_BACKSPACE]) || keystate[SDL_QUIT])
         {
             quit = 1;
@@ -114,7 +97,7 @@ int main(int argc, char* args[])
  
     }
 
-    //clean things up a little
+    //clean things up a little before exiting
     SDL_FreeSurface(screen);
     if(asteroidHead != NULL)
 	{
@@ -127,11 +110,57 @@ int main(int argc, char* args[])
 		bulletHead = NULL;
 	}
 
+
 	TTF_Quit();
 
  	SDL_Quit();
 
     return 0;
+}
+
+void pauseGame()
+{
+	//diplay "-paused-" on the screen
+	if(font != NULL)
+	{
+		highScorePos.x = (SCREEN_WIDTH/2)-((CHARWIDTH/2)*strlen("-paused-"));
+		text = TTF_RenderText_Solid(font, "-paused-", text_color);
+		SDL_BlitSurface(text, NULL, screen, &highScorePos);
+		SDL_Flip(screen);
+	}
+
+	//wait until key up else game doesn't pause
+	while(keystate[SDLK_RETURN])
+	{
+		SDL_PumpEvents();
+	}
+
+	gamePaused = !gamePaused;
+}
+
+//Bonus stuff
+void bonusItems()
+{
+	//this gross bool stops it just giving you infinite health before you change scores
+	if(!gotHealthPack && !(score%HEALTHBONUS) && score)
+	{
+		plane.upHP(1);
+		gotHealthPack == true;
+	}
+	/*once score has changed the user no longer 
+	  "has" the healthpack and so can get it 
+	  next time they reach score milestone*/
+	else if(score%HEALTHBONUS)
+	{
+		gotHealthPack = false;
+	}
+
+	//Laser powerup
+	if(!(score%BULLETBONUS) && score)
+	{
+		bonusAmmo = BONUSAMMO;
+		bulletFreq = 1;
+	}
 }
 
 
@@ -179,13 +208,16 @@ void render_frame(void)
 
 	keepScore();
 
+	//paint the image to screen
     SDL_Flip(screen);
 
+    //wait before next frame
     SDL_Delay(DELAY);
 
     return;
 }
 
+//longer game goes, more frequntly asteroids spawn
 void count()
 {
 	counter++;
@@ -195,12 +227,15 @@ void count()
 		frequency = 1;
 	}
 }
+
+//moves all objects on screen
 void moveObjects()
 {
 
-
+	//scroll background
 	bg.move();
 
+	//move player's plane
 	if(keystate[SDLK_UP])
 	{
 		plane.move(DIR_UP);
@@ -224,29 +259,38 @@ void moveObjects()
 	{
 		plane.move(DIR_RIGHT);
 	}
+
+	//shoot bullets
 	if(!(counter%bulletFreq) && (keystate[SDLK_SPACE] || keystate[SDLK_LCTRL]) )
 	{
 		addBulletToList(plane.getX(), plane.getY());
 	}
+
+	//spawn asteroid
 	if(((counter)%(int)frequency)==0)
 	{
 		addAsteroidToList();
 	}
 }
 
+//check collisions or offscreen
 void killObjects()
 {
 	clsBullet* bulletTemp;
 	clsAsteroid* asteroidTemp;
 	asteroidTemp = asteroidHead;
+	//walk thround entire asteroid list
 	while(asteroidTemp!=NULL)
 	{
 		bulletTemp = bulletHead;
+		//walk through entire bullet list
 		while(bulletTemp!=NULL)
 		{
+			//did bullet hit asteroid?
 			asteroidTemp->takeDamage(bulletTemp->collide(asteroidTemp->getX(),asteroidTemp->getY())); //checks all bullets for collisions with all asteroids
 			bulletTemp=bulletTemp->bulletNext;
 		}
+		//did player hit asteroid?
 		gameOver = plane.collide(asteroidTemp->getX(),asteroidTemp->getY(), plane.getHP());
 		asteroidTemp=asteroidTemp->asteroidNext;		//move to the next object in list
 	}	
@@ -254,9 +298,9 @@ void killObjects()
 	removeAsteroidFromList();
 }
 
-//////////////////////////////////////////////
-///Annoying, confusing Linked List Code///////
-//////////////////////////////////////////////
+/////////////////////////////////////////////////////
+///Annoying, not so confusing Linked List Code///////
+/////////////////////////////////////////////////////
 void addBulletToList(float x, float y)
 {
 	//create new bullet object
@@ -264,6 +308,7 @@ void addBulletToList(float x, float y)
 	bulletTemp = new clsBullet;
 	bulletTemp->setXY(x,y);
 
+	//decrease powerup ammo if player has it
 	if(bonusAmmo > 0)
 	{
 		bonusAmmo--;
@@ -385,12 +430,16 @@ void removeAsteroidFromList()
 	}		
 }
 
+
+//tell player they screwed up, save/display highscore
 void loseGame()
 {
 	gamePaused = false;
-	scorePos.x = GAMEOVEROFFSET;
-    scorePos.w = SCREEN_WIDTH;
 	sprintf(scoreText, "RIP | L+R to quit | Start to replay | Score: %i", score);
+	scorePos.x = (SCREEN_WIDTH/2)-((CHARWIDTH/2)*strlen(scoreText));
+    scorePos.w = SCREEN_WIDTH;
+
+    //w00t, new highscore
 	if(score > highScore)
 	{
 		highScore = score;
@@ -405,8 +454,10 @@ void loseGame()
 	}
 }
 
+//initialise variables for start of game
 void restartGame()
 {
+	//free any existing asteroid and bullets
 	if(asteroidHead != NULL)
 	{
 		asteroidHead->freeList();
@@ -417,6 +468,7 @@ void restartGame()
 		bulletHead->freeList();
 		bulletHead = NULL;
 	}
+	//give player back their hp and place them at bottom of screen
 	plane.reset();
 	gameOver = false;
 	gamePaused = false;
@@ -425,17 +477,18 @@ void restartGame()
 	frequency = FREQUENCY;
 	counter = 1;
 	score = 0;
-	scorePos.x = SCOREOFFSET;
+	scorePos.x = (SCREEN_WIDTH/2)-((CHARWIDTH/2)*strlen(scoreText));
     scorePos.y = 0;
     scorePos.h = 12;
     scorePos.w = 40;
     sprintf(highScoreText, "High Score:   %i", highScore);
-    highScorePos.x = (SCREEN_WIDTH/2);
+    highScorePos.x = (SCREEN_WIDTH/2)-((CHARWIDTH/2)*strlen(highScoreText));
     highScorePos.y = SCREEN_HEIGHT/2;
     highScorePos.h = 12;
     highScorePos.w = (SCREEN_WIDTH-highScorePos.y);
 }
 
+//render the score text
 void keepScore()
 {
     if(font != NULL)
@@ -443,8 +496,10 @@ void keepScore()
     	text = TTF_RenderText_Solid(font, scoreText, text_color);
     	SDL_BlitSurface(text, NULL, screen, &scorePos);
 
+    	//display highscore at end of game
     	if(gameOver)
     	{
+    		highScorePos.x = (SCREEN_WIDTH/2)-((CHARWIDTH/2)*strlen(highScoreText));
 	    	text = TTF_RenderText_Solid(font, highScoreText, text_color);
 			SDL_BlitSurface(text, NULL, screen, &highScorePos);
 		}
